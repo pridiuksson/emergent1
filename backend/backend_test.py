@@ -13,7 +13,7 @@ if not BACKEND_URL:
 
 def test_root_endpoint():
     """Test the root endpoint"""
-    response = requests.get(f"{BACKEND_URL}/")
+    response = requests.get(f"{BACKEND_URL}/api/")
     assert response.status_code == 200
     assert response.json() == {"message": "Mixtape Generator API"}
 
