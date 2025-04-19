@@ -115,30 +115,37 @@ function App() {
           <div className="tv-screen-container">
             <div className={`tv-screen ${isTvOn ? 'on' : 'off'} ${isStaticEffect ? 'static' : ''}`}>
               {playlist.length > 0 && isTvOn ? (
-                <YouTube
-                  videoId={playlist[currentVideoIndex].videoId}
-                  opts={{
-                    width: '100%',
-                    height: '100%',
-                    playerVars: {
-                      autoplay: 1,
-                      controls: 1, // Enable controls for better user experience
-                      showinfo: 0,
-                      rel: 0,
-                      iv_load_policy: 3,
-                      modestbranding: 1,
-                      origin: window.location.origin // Add origin for security
-                    },
-                  }}
-                  onReady={handlePlayerReady}
-                  onStateChange={handlePlayerStateChange}
-                  onEnd={handleVideoEnd}
-                  className="youtube-player"
-                  onError={(e) => {
-                    console.error("YouTube Player Error:", e);
-                    setVideoError(true);
-                  }}
-                />
+                <>
+                  <YouTube
+                    videoId={playlist[currentVideoIndex].videoId}
+                    opts={{
+                      width: '100%',
+                      height: '100%',
+                      playerVars: {
+                        autoplay: 1,
+                        controls: 1, // Enable controls for better user experience
+                        showinfo: 0,
+                        rel: 0,
+                        iv_load_policy: 3,
+                        modestbranding: 1,
+                        origin: window.location.origin // Add origin for security
+                      },
+                    }}
+                    onReady={handlePlayerReady}
+                    onStateChange={handlePlayerStateChange}
+                    onEnd={handleVideoEnd}
+                    className="youtube-player"
+                    onError={(e) => {
+                      console.error("YouTube Player Error:", e);
+                      setVideoError(true);
+                    }}
+                  />
+                  {videoError && (
+                    <div className="video-error-overlay">
+                      <p>Video unavailable. Try another song or open directly in YouTube.</p>
+                    </div>
+                  )}
+                </>
               ) : isStaticEffect ? (
                 <div className="static-effect"></div>
               ) : (
