@@ -1,69 +1,85 @@
 import requests
-import os
-from dotenv import load_dotenv
+import pytest
 import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class BackendAPITester:
+class TestMixtapeAPI:
     def __init__(self):
-        # Get the backend URL from environment variable
-        load_dotenv()
-        self.base_url = os.getenv('REACT_APP_BACKEND_URL', 'http://localhost:8001')
+        self.base_url = "https://backend-7261.api.dev.ainize.ai"
         self.tests_run = 0
         self.tests_passed = 0
-        logger.info(f"Testing backend at: {self.base_url}")
 
-    def run_test(self, name, method, endpoint, expected_status=200, data=None):
+    def run_test(self, name, method, endpoint, expected_status, data=None):
         """Run a single API test"""
-        self.tests_run += 1
         url = f"{self.base_url}/{endpoint}"
+        headers = {'Content-Type': 'application/json'}
+        
+        self.tests_run += 1
+        logger.info(f"\n🔍 Testing {name}...")
         
         try:
-            logger.info(f"\n🔍 Testing {name} at {url}")
-            
             if method == 'GET':
-                response = requests.get(url)
+                response = requests.get(url, headers=headers)
             elif method == 'POST':
-                response = requests.post(url, json=data)
-            
-            status_match = response.status_code == expected_status
-            
-            if status_match:
+                response = requests.post(url, json=data, headers=headers)
+
+            success = response.status_code == expected_status
+            if success:
                 self.tests_passed += 1
-                logger.info(f"✅ {name} - Status: {response.status_code}")
-                logger.info(f"Response: {response.json()}")
-                return True, response.json()
+                logger.info(f"✅ Passed - Status: {response.status_code}")
             else:
-                logger.error(f"❌ {name} - Expected {expected_status}, got {response.status_code}")
-                logger.error(f"Response: {response.text}")
-                return False, None
+                logger.error(f"❌ Failed - Expected {expected_status}, got {response.status_code}")
+
+            return success, response.json() if success else {}
 
         except Exception as e:
-            logger.error(f"❌ {name} - Error: {str(e)}")
-            return False, None
+            logger.error(f"❌ Failed - Error: {str(e)}")
+            return False, {}
 
     def test_root_endpoint(self):
         """Test the root endpoint"""
         return self.run_test(
             "Root Endpoint",
             "GET",
-            "api",
+            "",
             200
         )
 
+    def test_generate_playlist(self, theme="rock"):
+        """Test playlist generation"""
+        return self.run_test(
+            "Generate Playlist",
+            "POST",
+            "api/generate-playlist",
+            200,
+            data={"theme": theme, "count": 10}
+        )
+
 def main():
-    tester = BackendAPITester()
+    tester = TestMixtapeAPI()
     
     # Test root endpoint
-    tester.test_root_endpoint()
-    
-    # Print summary
-    logger.info(f"\n📊 Test Summary:")
-    logger.info(f"Tests Passed: {tester.tests_passed}/{tester.tests_run}")
-    
+    root_success, root_response = tester.test_root_endpoint()
+    assert root_success, "Root endpoint test failed"
+    assert "message" in root_response, "Root endpoint response missing message"
+
+    # Test playlist generation with different themes
+    themes = ["rock", "pop", "hip hop"]
+    for theme in themes:
+        success, response = tester.test_generate_playlist(theme)
+        assert success, f"Playlist generation failed for theme: {theme}"
+        assert "playlist" in response, "Response missing playlist data"
+        assert len(response["playlist"]) > 0, "Playlist is empty"
+        
+        # Verify playlist item structure
+        first_song = response["playlist"][0]
+        assert all(key in first_song for key in ["title", "artist", "videoId", "thumbnail"]), \
+            "Playlist item missing required fields"
+
+    logger.info(f"\n📊 Tests passed: {tester.tests_passed}/{tester.tests_run}")
     return 0 if tester.tests_passed == tester.tests_run else 1
 
 if __name__ == "__main__":
