@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Get the backend URL from environment
-BACKEND_URL = os.getenv('REACT_APP_BACKEND_URL')
+BACKEND_URL = "https://c5c05f74-9ce7-4946-abe7-d7e2823838ee.preview.emergentagent.com"
 
 def test_root_endpoint():
     """Test the root endpoint"""
