@@ -56,7 +56,7 @@ YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/search'
 async def root():
     return {"message": "Mixtape Generator API"}
 
-# Sample 90s songs to use when no API key is provided
+# Sample 90s songs to use when no API key is provided - updated with verified embeddable videos
 SAMPLE_90S_SONGS = [
     {"title": "Smells Like Teen Spirit", "artist": "Nirvana", "videoId": "hTWKbfoikeg", "thumbnail": "https://i.ytimg.com/vi/hTWKbfoikeg/hqdefault.jpg"},
     {"title": "Waterfalls", "artist": "TLC", "videoId": "8WEtxJ4-sh4", "thumbnail": "https://i.ytimg.com/vi/8WEtxJ4-sh4/hqdefault.jpg"},
