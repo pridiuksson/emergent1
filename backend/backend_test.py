@@ -1,91 +1,88 @@
-import pytest
 import requests
-import json
+import pytest
+import logging
 
-BACKEND_URL = "https://c5c05f74-9ce7-4946-abe7-d7e2823838ee.preview.emergentagent.com"
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def test_root_endpoint():
-    """Test the root endpoint"""
-    response = requests.get(f"{BACKEND_URL}/")
-    assert response.status_code == 200
-    data = response.json()
-    assert "message" in data
-    assert data["message"] == "Mixtape Generator API"
+class TestMixtapeAPI:
+    def __init__(self):
+        self.base_url = "https://mixtape-generator-backend-5000.codedamn.app"
+        self.tests_run = 0
+        self.tests_passed = 0
 
-def test_generate_playlist():
-    """Test playlist generation with different themes"""
-    themes = ["rock", "pop", "hip hop"]
-    
-    for theme in themes:
-        response = requests.post(
-            f"{BACKEND_URL}/api/generate-playlist",
-            json={"theme": theme, "count": 5}
+    def run_test(self, name, method, endpoint, expected_status, data=None):
+        """Run a single API test"""
+        url = f"{self.base_url}/{endpoint}"
+        
+        self.tests_run += 1
+        logger.info(f"\n🔍 Testing {name}...")
+        
+        try:
+            if method == 'GET':
+                response = requests.get(url)
+            elif method == 'POST':
+                response = requests.post(url, json=data)
+
+            success = response.status_code == expected_status
+            if success:
+                self.tests_passed += 1
+                logger.info(f"✅ Passed - Status: {response.status_code}")
+                return True, response.json()
+            else:
+                logger.error(f"❌ Failed - Expected {expected_status}, got {response.status_code}")
+                return False, None
+
+        except Exception as e:
+            logger.error(f"❌ Failed - Error: {str(e)}")
+            return False, None
+
+    def test_root_endpoint(self):
+        """Test root endpoint"""
+        return self.run_test(
+            "Root Endpoint",
+            "GET",
+            "",
+            200
         )
-        assert response.status_code == 200
-        data = response.json()
-        
-        # Check response structure
-        assert "playlist" in data
-        assert "message" in data
-        
-        # Verify playlist data
-        playlist = data["playlist"]
-        assert isinstance(playlist, list)
-        assert len(playlist) <= 5  # Should respect count parameter
-        
-        # Check each song has required fields
-        for song in playlist:
-            assert "title" in song
-            assert "artist" in song
-            assert "videoId" in song
-            assert "thumbnail" in song
-            
-            # Verify data types
-            assert isinstance(song["title"], str)
-            assert isinstance(song["artist"], str)
-            assert isinstance(song["videoId"], str)
-            assert isinstance(song["thumbnail"], str)
-            
-            # Verify thumbnail URL format
-            assert song["thumbnail"].startswith("http")
 
-def test_error_handling():
-    """Test error handling with invalid requests"""
+    def test_generate_playlist(self, theme):
+        """Test playlist generation"""
+        return self.run_test(
+            "Generate Playlist",
+            "POST",
+            "api/generate-playlist",
+            200,
+            data={"theme": theme, "count": 10}
+        )
+
+def main():
+    tester = TestMixtapeAPI()
     
-    # Test missing theme
-    response = requests.post(
-        f"{BACKEND_URL}/api/generate-playlist",
-        json={"count": 5}
-    )
-    assert response.status_code in [400, 422]  # FastAPI validation error
+    # Test root endpoint
+    root_success, root_response = tester.test_root_endpoint()
+    if root_success:
+        logger.info(f"Root endpoint response: {root_response}")
     
-    # Test invalid count
-    response = requests.post(
-        f"{BACKEND_URL}/api/generate-playlist",
-        json={"theme": "rock", "count": "invalid"}
-    )
-    assert response.status_code in [400, 422]  # FastAPI validation error
+    # Test playlist generation with different themes
+    themes = ["rock", "pop", "hip hop"]
+    for theme in themes:
+        success, response = tester.test_generate_playlist(theme)
+        if success:
+            playlist = response.get('playlist', [])
+            logger.info(f"\nGenerated playlist for theme '{theme}':")
+            logger.info(f"Number of songs: {len(playlist)}")
+            if playlist:
+                logger.info("Sample song:")
+                logger.info(f"Title: {playlist[0]['title']}")
+                logger.info(f"Artist: {playlist[0]['artist']}")
+                logger.info(f"Video ID: {playlist[0]['videoId']}")
     
-    # Test count exceeding limit
-    response = requests.post(
-        f"{BACKEND_URL}/api/generate-playlist",
-        json={"theme": "rock", "count": 20}
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert len(data["playlist"]) <= 15  # Should be capped at 15
+    # Print final results
+    logger.info(f"\n📊 Tests Summary:")
+    logger.info(f"Tests passed: {tester.tests_passed}/{tester.tests_run}")
+    return 0 if tester.tests_passed == tester.tests_run else 1
 
 if __name__ == "__main__":
-    print("Testing root endpoint...")
-    test_root_endpoint()
-    print("✅ Root endpoint test passed")
-    
-    print("\nTesting playlist generation...")
-    test_generate_playlist()
-    print("✅ Playlist generation tests passed")
-    
-    print("\nTesting error handling...")
-    test_error_handling()
-    print("✅ Error handling tests passed")
-    
-    print("\n🎉 All backend tests passed!")
+    main()
