@@ -134,7 +134,10 @@ function App() {
                   onStateChange={handlePlayerStateChange}
                   onEnd={handleVideoEnd}
                   className="youtube-player"
-                  onError={(e) => console.error("YouTube Player Error:", e)}
+                  onError={(e) => {
+                    console.error("YouTube Player Error:", e);
+                    setVideoError(true);
+                  }}
                 />
               ) : isStaticEffect ? (
                 <div className="static-effect"></div>
