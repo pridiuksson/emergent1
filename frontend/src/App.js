@@ -15,6 +15,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isTvOn, setIsTvOn] = useState(false);
   const [isStaticEffect, setIsStaticEffect] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const playerRef = useRef(null);
 
   const handleSubmit = async (e) => {
