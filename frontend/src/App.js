@@ -164,32 +164,7 @@ function App() {
             </div>
           </div>
           
-          <div className="media-controls">
-            <button 
-              onClick={togglePlay} 
-              disabled={!isTvOn || playlist.length === 0}
-              className="control-button"
-              title={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? <FaPause /> : <FaPlay />}
-            </button>
-            <button 
-              onClick={handleRandomSong} 
-              disabled={!isTvOn || playlist.length === 0}
-              className="control-button"
-              title="Random Song"
-            >
-              <FaRandom />
-            </button>
-            <button 
-              onClick={openYouTube} 
-              disabled={!isTvOn || playlist.length === 0}
-              className="control-button youtube-btn"
-              title="Open in YouTube"
-            >
-              <FaMusic />
-            </button>
-          </div>
+          {/* Removed TV control buttons as requested */}
         </div>
         
         <div className="tv-stand"></div>
