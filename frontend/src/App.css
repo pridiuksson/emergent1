@@ -43,7 +43,8 @@ body::after {
 
 .tv-frame {
   position: relative;
-  width: 500px;
+  width: 100%;
+  max-width: 1000px;
   height: 400px;
   background-color: #333;
   border-radius: 20px;
