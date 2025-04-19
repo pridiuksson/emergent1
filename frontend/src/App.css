@@ -1,38 +1,479 @@
-.App {
-  text-align: center;
-}
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'VT323', monospace;
+  background: linear-gradient(135deg, #FF5F6D, #FFC371);
   min-height: 100vh;
+  color: #fff;
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* TV Styling */
+.tv-container {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.tv-frame {
+  position: relative;
+  width: 500px;
+  height: 400px;
+  background-color: #333;
+  border-radius: 20px;
+  border: 15px solid #222;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  overflow: hidden;
+}
+
+.tv-antenna {
+  position: absolute;
+  width: 5px;
+  height: 50px;
+  background-color: #222;
+  top: -50px;
+}
+
+.tv-antenna.left {
+  left: 30%;
+  transform: rotate(-15deg);
+}
+
+.tv-antenna.right {
+  right: 30%;
+  transform: rotate(15deg);
+}
+
+.tv-screen-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 40px;
+  margin-bottom: 15px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.tv-screen {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.tv-screen.off {
+  background-color: #111;
+}
+
+.tv-screen-off {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  height: 100%;
+  color: #555;
+  text-align: center;
+  padding: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+.tv-screen-off p {
+  margin-top: 10px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.static-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(
+      rgba(255, 255, 255, 0) 50%, 
+      rgba(0, 0, 0, 0.2) 50%
+    ),
+    linear-gradient(
+      90deg, 
+      rgba(255, 0, 0, 0.03), 
+      rgba(0, 255, 0, 0.03), 
+      rgba(0, 0, 255, 0.03)
+    );
+  background-size: 100% 2px, 3px 100%;
+  animation: static 0.2s infinite linear;
+}
+
+@keyframes static {
+  0% {
+    background-position: 0 0, 0 0;
+    opacity: 1;
   }
-  to {
-    transform: rotate(360deg);
+  10% {
+    background-position: -1% -1%, -2% 0;
+    opacity: 0.8;
+  }
+  20% {
+    background-position: 1% 1%, 2% 0;
+    opacity: 0.9;
+  }
+  30% {
+    background-position: -2% -2%, -3% 0;
+    opacity: 0.7;
+  }
+  40% {
+    background-position: 2% 2%, 3% 0;
+    opacity: 0.8;
+  }
+  50% {
+    background-position: -3% -3%, -5% 0;
+    opacity: 0.9;
+  }
+  60% {
+    background-position: 3% 3%, 5% 0;
+    opacity: 1;
+  }
+  70% {
+    background-position: -4% -4%, -7% 0;
+    opacity: 0.8;
+  }
+  80% {
+    background-position: 4% 4%, 7% 0;
+    opacity: 0.9;
+  }
+  90% {
+    background-position: -5% -5%, -9% 0;
+    opacity: 0.7;
+  }
+  100% {
+    background-position: 5% 5%, 9% 0;
+    opacity: 0.8;
+  }
+}
+
+.tv-screen.static {
+  position: relative;
+}
+
+.tv-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.tv-knobs {
+  display: flex;
+  gap: 30px;
+}
+
+.tv-knob {
+  width: 15px;
+  height: 15px;
+  background-color: #666;
+  border-radius: 50%;
+  border: 3px solid #444;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.tv-stand {
+  width: 200px;
+  height: 30px;
+  background-color: #222;
+  margin: 0 auto;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3);
+}
+
+.media-controls {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+.control-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #555;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.control-button:hover:not(:disabled) {
+  background-color: #777;
+  transform: scale(1.1);
+}
+
+.control-button:disabled {
+  background-color: #444;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.youtube-btn {
+  background-color: #ff0000;
+}
+
+.youtube-btn:hover:not(:disabled) {
+  background-color: #cc0000;
+}
+
+/* Mixtape Controls Styling */
+.mixtape-controls {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.app-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #FF5F6D;
+  text-shadow: 3px 3px 0 #333, -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333, 1px 1px 0 #333;
+  letter-spacing: 2px;
+}
+
+.theme-form {
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.theme-input {
+  flex: 1;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.theme-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.submit-btn {
+  background-color: #FF5F6D;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 20px;
+  cursor: pointer;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #ff4657;
+  transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #f88;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Playlist Styling */
+.playlist-container {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.playlist-title {
+  margin-top: 0;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 18px;
+  color: #FFC371;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.playlist {
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.playlist-item {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.playlist-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+}
+
+.playlist-item.active {
+  background-color: rgba(255, 95, 109, 0.4);
+  border-left: 4px solid #FF5F6D;
+}
+
+.song-thumbnail {
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+  overflow: hidden;
+  border-radius: 4px;
+  position: relative;
+}
+
+.song-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.now-playing {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 95, 109, 0.9);
+  color: white;
+  font-size: 10px;
+  text-align: center;
+  padding: 2px 0;
+}
+
+.song-info {
+  flex: 1;
+}
+
+.song-title {
+  font-size: 18px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-artist {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Scrollbar Styling */
+.playlist::-webkit-scrollbar {
+  width: 8px;
+}
+
+.playlist::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.playlist::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+}
+
+.playlist::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.youtube-player {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px;
+  }
+  
+  .tv-frame {
+    width: 100%;
+    max-width: 400px;
+    height: 350px;
+  }
+  
+  .tv-screen-container {
+    height: 250px;
+  }
+  
+  .app-title {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 500px) {
+  .tv-frame {
+    max-width: 320px;
+    height: 300px;
+  }
+  
+  .tv-screen-container {
+    height: 200px;
+  }
+  
+  .media-controls {
+    gap: 15px;
+  }
+  
+  .control-button {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+  
+  .app-title {
+    font-size: 18px;
   }
 }
