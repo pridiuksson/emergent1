@@ -28,11 +28,20 @@ function App() {
     setIsTvOn(false);
     setIsStaticEffect(true);
     
+    // Use a timeout promise to handle long-running requests
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Request timed out')), 20000)
+    );
+    
     try {
-      const response = await axios.post(`${BACKEND_URL}/api/generate-playlist`, {
-        theme: theme,
-        count: 10
-      });
+      // Race between the actual request and the timeout
+      const response = await Promise.race([
+        axios.post(`${BACKEND_URL}/api/generate-playlist`, {
+          theme: theme,
+          count: 10
+        }),
+        timeoutPromise
+      ]);
       
       setPlaylist(response.data.playlist);
       setCurrentVideoIndex(0);
@@ -45,7 +54,11 @@ function App() {
       
     } catch (err) {
       console.error("Error fetching playlist:", err);
-      setError("Failed to generate playlist. Please try again.");
+      if (err.message === 'Request timed out') {
+        setError("Playlist generation timed out. Please try again or try a different theme.");
+      } else {
+        setError("Failed to generate playlist. Please try again.");
+      }
       setIsStaticEffect(false);
     } finally {
       setIsLoading(false);
