@@ -188,6 +188,17 @@ function App() {
           </div>
         </form>
         
+        {playlist.length > 0 && (
+          <button 
+            onClick={openYouTube} 
+            disabled={!isTvOn || playlist.length === 0}
+            className="youtube-button"
+            title="Open in YouTube"
+          >
+            <FaMusic /> Watch on YouTube
+          </button>
+        )}
+        
         {error && <div className="error-message">{error}</div>}
         
         {playlist.length > 0 && (
