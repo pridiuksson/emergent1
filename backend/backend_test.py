@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class TestMixtapeAPI:
     def __init__(self):
-        self.base_url = "https://mixtape-generator-backend-5000.codedamn.app"
+        self.base_url = "https://c5c05f74-9ce7-4946-abe7-d7e2823838ee.preview.emergentagent.com"
         self.tests_run = 0
         self.tests_passed = 0
 
