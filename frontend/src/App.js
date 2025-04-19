@@ -24,6 +24,7 @@ function App() {
 
     setIsLoading(true);
     setError(null);
+    setVideoError(false);
     setIsTvOn(false);
     setIsStaticEffect(true);
     
